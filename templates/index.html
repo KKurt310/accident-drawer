@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kaza Çizim AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        textarea {
+            width: 80%;
+            height: 100px;
+            margin: 10px;
+        }
+
+        img {
+            max-width: 600px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Kaza Tarifi Yazın</h2>
+    <textarea id="description" placeholder="Örn: İki araba kafa kafaya çarpıştı, düz yol"></textarea><br>
+    <button onclick="generate()">Kuşbakışı Çizim Üret</button>
+    <br>
+    <img id="output" src="" alt="Çizim burada görünecek">
+    <script>
+        async function generate() {
+            const desc = document.getElementById('description').value;
+            if (!desc) {
+                alert("Lütfen bir kaza tarifi yazın!");
+                return;
+            }
+            const response = await fetch('/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ description: desc })
+            });
+            if (response.ok) {
+                const blob = await response.blob();
+                document.getElementById('output').src = URL.createObjectURL(blob);
+            } else {
+                alert("Hata oluştu, tekrar deneyin!");
+            }
+        }
+    </script>
+</body>
+
+</html>
